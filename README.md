@@ -5,15 +5,15 @@ Aug, 2019
 Jet Yu   
 jianyuan@vt.edu    
 Wireless, ECE, Virginia Tech 
-![](./fig//H.png)
+![](./map.jpeg)
 
 
 # Slides
-[performance Google slides](TODO)
+[performance Google slides]([TODO](https://docs.google.com/presentation/d/1wvBJu3MCXwSCdlEYCqtS8yEkW09xzvSyF3J_e1V8rkM/edit?usp=sharing))
 
 
 # News
-(Sep 4) starter code online
+(Sep 29) starter code online
 
 # Roadmap
 
@@ -21,52 +21,26 @@ Wireless, ECE, Virginia Tech
 running on ARC VT is prefered. 
  * Matlab 
    * Machine Learning Toolbox  
-   * GPU
-* python
-  * packages
-      * `tensorflow`
-      * `keras`
-      * `matlibplot`
-      * `hdf5storage`
-      * `yagmail` - send result and codes to email
-  * run `conda install conda-forge [package name]`
-  * for yagmail, run `conda install -c atddatms yagmail`, if not work and error like `conflict with subproccess2`, try `pip install yagmail`  
+   * GPU optional
 
 
-# Generate interfer type  
-* awgn (additive white gaussain noise)
-* awgn+tone  
-* awgn+chirp  
-* awgn+filtN(filtered noise, low-passed white noise) 
-* copyCat Noise, with unknown modulation and pulse shaping scheme.   
+
+
 
 # How to run
-* (Matlab) execute `mainData.m` file to generate training Data, then `main.m` to launch 
-* (Python) run matlab file to generate data first, then `mainDNN.py` or `mainRNN.py`.
-
-# How to run SVM in matlab
-* download [libsvm](https://github.com/cjlin1/libsvm)  
-* change directory to ./matlab
-* execute `make.m` file, then new `.c` files are generated  
-* load your `.mat` file, then 
-  ```
-  model = svmtrain(training_label_vector, training_instance_matrix, ['libsvm_options']);
-  ```
-* predict
-  ```
-  [predicted_label] = svmpredict(testing_label_vector,  ...
-                                testing_instance_matrix, ...
-                                model, ['libsvm_options']);
-    ```
+* `BerPred.m` to generate dataset
+* `estFitnet.m` to training and testing
+  
+# Dataset Description
+* `X1.mat` `Y1.mat`, FFT_Threshold, `Ndat` 2000, `N` number of bits 1e4
+* `X2.mat` `Y2.mat`, DSSS, `Ndat` 2000, `N` number of bits 1e4   
+* `X3.mat` `Y3.mat`, DSSS, `Ndat` 2000, `N` number of bits 1e4 
+*  `X1_n.mat` `Y1_n.mat`, FFT_Threshold, AWGN only, `Ndat` approxi 400, `N` number of bits 1e4  
+*  `XLong1.mat` `YLong1.mat`, FFT_Threshold, `Ndat` 2000, `N` number of bits __1e5__
+*  `XLong3.mat` `YLong3.mat`, Notch, `Ndat` 2000, `N` number of bits __1e5__
+*  `XScale1.mat` `YScale1.mat`, FFT_Threshold, `Ndat` __20000__, `N` number of bits 1e4
 
 # Running Time Reference
-for default datasize of 16,000, data generation cost ~ 1min, and training takes ~8min.
-
-# Bibliography
-[Bibliography](./todo)
-
-# Code Reference
-[libsvm - fast SVM](https://github.com/cjlin1/libsvm)
 
 
 
