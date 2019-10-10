@@ -1,7 +1,11 @@
+% ======== Bit-Error Rate Prediction using NN ========
+% ======== part 2: traning and testing data ====
+
+
 clear all;
 
-load('XL3.mat');
-load('YL3.mat');
+load('./DATA/XLong3.mat');
+load('./DATA/YLong3.mat');
 
 % X = X_n;
 % Y = Y_n;
@@ -26,7 +30,7 @@ Ytest = Y(trainLen+1:end,ID);
 
 hiddenLayerSize = [32 32 32];
 net = fitnet(hiddenLayerSize);
-[net, tr] = train(net, Xtrain', Ytrain');
+[net, tr] = train(net, Xtrain', Ytrain');   % using LM method
 
 Ypred = net(Xtest');
 Ypred = Ypred';
@@ -35,9 +39,6 @@ err = abs(Ytest - Ypred);
 
 figure;
 scatter(Ytest, Ypred);
-% scatter(Ytest(:,1), Ypred(:,1));
-% hold on;
-% scatter(Ytest(:,2), Ypred(:,2));
 clear title xlabel ylabel;
 grid on;
 title('Ytest vs ML estimate')

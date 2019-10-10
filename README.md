@@ -9,7 +9,7 @@ Wireless, ECE, Virginia Tech
 
 
 # Slides
-[performance Google slides]([TODO](https://docs.google.com/presentation/d/1wvBJu3MCXwSCdlEYCqtS8yEkW09xzvSyF3J_e1V8rkM/edit?usp=sharing))
+![performance Google slides]([TODO](https://docs.google.com/presentation/d/1wvBJu3MCXwSCdlEYCqtS8yEkW09xzvSyF3J_e1V8rkM/edit?usp=sharing))
 
 
 # News

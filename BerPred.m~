@@ -8,9 +8,9 @@ clc;
 
 mID = 1    % method applied, 1 for FFT-Threshold, 2 for DSSSS ,3 for Notch 
 N = 1e4        % number of bits run per iteration
-Ndat = 200     % number of dataset size
-Xname =  strcat('./DATA/Xtest',num2str(mID),'.mat');     % name of saved data
-Yname =  strcat('./DATA/Ytest',num2str(mID),'.mat');
+Ndat = 20     % number of dataset size
+Xname =  strcat('XS',num2str(mID),'.mat');
+
 
 %====================Add Path==========================%
 addpath(genpath('./'));
