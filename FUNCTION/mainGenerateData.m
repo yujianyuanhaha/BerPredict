@@ -13,7 +13,7 @@ Xname =  strcat('./DATA/Xtest',num2str(mID),'.mat');     % name of saved data
 Yname =  strcat('./DATA/Ytest',num2str(mID),'.mat');
 
 %====================Add Path==========================%
-addpath(genpath('./'));
+addpath(genpath('../'));
 rand('seed',0);
 randn('seed',0);
 

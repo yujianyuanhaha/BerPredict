@@ -21,7 +21,7 @@ Wireless, ECE, Virginia Tech
 # Roadmap
 
 # Config
-running on ARC VT is prefered. 
+running on ARC VT is prefered, run python is preferred.
  * Matlab 
    * Machine Learning Toolbox  
    * GPU optional
@@ -31,9 +31,11 @@ running on ARC VT is prefered.
 
 
 # How to run
-* `BerPred.m` to generate dataset
-* `estFitnet.m` to training and testing w/ Matlab `fitnet` (Function fitting neural network) function
+* down data into `./DATA` folder via the [link](https://drive.google.com/drive/folders/1SEYScWxg7xViXz1snsuuhOBDKR7r1Npt?usp=sharing)
+* if need, run `./FUNCTION/mainGenerateData.m` to generate dataset
+* `mainFitnet.m` to training and testing w/ Matlab `fitnet` (Function fitting neural network) function
 * `mainDNN.m`  w/ customized Matlab DNN
+* `main.py`  tensorflow python.
   
 # Dataset Description
 * `X1.mat` `Y1.mat`, FFT_Threshold, `Ndat` 2000, `N` number of bits 1e4
