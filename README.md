@@ -9,10 +9,10 @@ Wireless, ECE, Virginia Tech
 
 
 # Slides
-![performance Google slides]([TODO](https://docs.google.com/presentation/d/1wvBJu3MCXwSCdlEYCqtS8yEkW09xzvSyF3J_e1V8rkM/edit?usp=sharing))
+[performance Google slides]([TODO](https://docs.google.com/presentation/d/1wvBJu3MCXwSCdlEYCqtS8yEkW09xzvSyF3J_e1V8rkM/edit?usp=sharing))
 
 # Dataset
-![DataSet](https://drive.google.com/drive/folders/1SEYScWxg7xViXz1snsuuhOBDKR7r1Npt?usp=sharing)
+[DataSet](https://drive.google.com/drive/folders/1SEYScWxg7xViXz1snsuuhOBDKR7r1Npt?usp=sharing)
 
 
 # News
@@ -32,7 +32,8 @@ running on ARC VT is prefered.
 
 # How to run
 * `BerPred.m` to generate dataset
-* `estFitnet.m` to training and testing
+* `estFitnet.m` to training and testing w/ Matlab `fitnet` (Function fitting neural network) function
+* `mainDNN.m`  w/ customized Matlab DNN
   
 # Dataset Description
 * `X1.mat` `Y1.mat`, FFT_Threshold, `Ndat` 2000, `N` number of bits 1e4

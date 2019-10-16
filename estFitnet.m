@@ -7,12 +7,20 @@ clear all;
 load('./DATA/XLong3.mat');
 load('./DATA/YLong3.mat');
 
+Y = - 10*(log(Y/1000)/log(10));
+
+% === !  trim the Inf in Y ======
+
+Y( isinf(Y)) = 100;
+
+
+
 % X = X_n;
 % Y = Y_n;
 
 ID = 2;   % 1 for iMBer, 2 for MitBer
 figure;
-figure;histogram(Y(:,ID))
+histogram(Y(:,ID))
 title('histrogram of MitBER');
 xlabel('MitBER (x10^3)')
 
@@ -29,7 +37,14 @@ Ytest = Y(trainLen+1:end,ID);
 
 
 hiddenLayerSize = [32 32 32];
+
+
+
+
 net = fitnet(hiddenLayerSize);
+net.trainParam.Mu = 10^(-100)
+
+
 [net, tr] = train(net, Xtrain', Ytrain');   % using LM method
 
 Ypred = net(Xtest');
