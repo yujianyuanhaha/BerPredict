@@ -1,7 +1,7 @@
 """
 #!/usr/bin/env python
 # coding: utf-8
-# Angle of Arrival Estimation 
+# BER predict
 # Jianyuan Jet Yu, jianyuan@vt.edu
 
 # flexiable version w/ tensorflow
@@ -32,17 +32,17 @@ import math
 # ======================== global setting ======================== 
 
 dataID = './Data/'    
-note = ' TF digital, spread, 1 sig, SGD '  
+note = ' '  
 Nsig = 1 
 
 
 
 isSend       = 0     # send Email
-epochs     = 4    # number of learning epochs
+epochs     = 200    # number of learning epochs
 batch_size = 512
 os.environ["KMP_DUPLICATE_LIB_OK"] = "1"   # sometime make "1" for Mac 
 
-TEXT    = "low dataset" 
+TEXT    = " " 
 num_bins = 50
 
 tic = time.time()
@@ -107,8 +107,12 @@ def true_dist(y_true, y_pred):
     return np.sqrt(np.square(np.abs(y_pred[:,0]-y_true[:,0]))+ np.square(np.abs(y_pred[:,1]-y_true[:,1])) )
     # to be amend
 
+#def dist(y_true, y_pred):    
+#     return tf.reduce_mean((tf.sqrt(tf.square(tf.abs(y_pred[:,0]-y_true[:,0]))+ tf.square(tf.abs(y_pred[:,1]-y_true[:,1])))))  
+    
+    
 def dist(y_true, y_pred):    
-     return tf.reduce_mean((tf.sqrt(tf.square(tf.abs(y_pred[:,0]-y_true[:,0]))+ tf.square(tf.abs(y_pred[:,1]-y_true[:,1])))))  
+     return tf.reduce_mean(tf.sqrt(tf.square(tf.abs(y_pred-y_true)) ))      
 
 class RBFLayer(Layer):
     def __init__(self, units, gamma, **kwargs):
@@ -139,14 +143,16 @@ class RBFLayer(Layer):
 
   
     
-t = hdf5storage.loadmat(dataID+'Xtrain.mat')
-Xtrain = t['Xtrain'].T  # Nsnr X Ndat X 42
-t = hdf5storage.loadmat(dataID+'Ytrain.mat')
-Ytrain = t['Ytrain'].T  # Nsnr X Ndat X dim X 2
-t = hdf5storage.loadmat(dataID+'Xtest.mat')
-Xtest = t['Xtest'].T 
-t = hdf5storage.loadmat(dataID+'Ytest.mat')
-Ytest = t['Ytest'].T
+t = hdf5storage.loadmat(dataID+'XLong3.mat')
+X = t['X'] 
+Xtrain = X[:1599,:]
+Xtest = X[1600:,:]
+t = hdf5storage.loadmat(dataID+'YLong3.mat')
+Y= t['Y'] 
+Y = - 10*(np.log(Y/1000)/np.log(10));   # log value
+Ytrain = Y[:1599,:]
+Ytest = Y[1600:,:]
+
 
 
 with open("outPut_TF.txt", "a") as text_file:
@@ -154,7 +160,7 @@ with open("outPut_TF.txt", "a") as text_file:
     text_file.write( "=== " + note + " === \n" )
     text_file.write( "--- caseID %s  begin --- \n" %(dataID))
     text_file.write( "--- local time  " + dt_string + " --- \n" )
-    Ytest = Ytest
+#    Ytest = Ytest
 
     Xval = Xtrain[0:20,:];
     Yval = Ytrain[0:20];
@@ -166,7 +172,7 @@ with open("outPut_TF.txt", "a") as text_file:
     Xtest = Xtest[:,:,np.newaxis]
     Xval = Xval[:,:,np.newaxis]
 
-    nn_input  = Input((30,1))
+    nn_input  = Input((9,1))
                 
     nn_output = Flatten()(nn_input)
     # nn_output = LSTM(units=136, dropout_U = 0.2, dropout_W = 0.2)(nn_input)
@@ -183,11 +189,12 @@ with open("outPut_TF.txt", "a") as text_file:
     nn_output = Dense(32,activation='relu')(nn_output)
 #        nn_output = Dropout(0.1)(nn_output)
 #        nn_output = Dropout(0.2)(nn_output)
-    nn_output = Dense(2*Nsig,activation='linear')(nn_output)
+    nn_output = Dense(2,activation='linear')(nn_output)
     #  directly output 3 para, non classify
     nn = Model(inputs=nn_input,outputs=nn_output)
     
     nn.compile(optimizer='adam', loss='mse',metrics=[dist])
+#    nn.compile(optimizer='adam', loss='mse')
     nn.summary()
 
     train_hist = nn.fit(x=Xtrain,y=Ytrain,\
@@ -200,10 +207,10 @@ with open("outPut_TF.txt", "a") as text_file:
     Ypredtrain = nn.predict( Xtrain)
     Ypred = nn.predict( Xtest)
     
-    Ypredtrain = Ypredtrain/math.pi*180
-    Ypred = Ypred/math.pi*180
-    Ytest = Ytest/math.pi*180
-    Ytrain = Ytrain/math.pi*180
+    Ypredtrain = Ypredtrain
+#    Ypred = Ypred
+#    Ytest = Ytest
+#    Ytrain = Ytrain
     
     
     err = np.mean(abs(Ytest-Ypred),axis=0);
