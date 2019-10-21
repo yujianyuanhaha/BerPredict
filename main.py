@@ -150,6 +150,17 @@ Xtest = X[1600:,:]
 t = hdf5storage.loadmat(dataID+'YLong3.mat')
 Y= t['Y'] 
 Y = - 10*(np.log(Y/1000)/np.log(10));   # log value
+
+
+
+for i in range(0,2000):
+    for j in range(0,2):
+        if np.isinf(Y[i,j]):
+            Y[i,j] = 100
+
+
+
+
 Ytrain = Y[:1599,:]
 Ytest = Y[1600:,:]
 
@@ -252,7 +263,7 @@ with open("outPut_TF.txt", "a") as text_file:
    
     plt.hist(err,bins=64)
     plt.ylabel('Number of occurence')
-    plt.xlabel('Estimate error (deg)')
+    plt.xlabel('Estimate error (-10log)')
     plt.grid(True)  
     plt.title('histogram of estimation error')
     plt.savefig(dataID+'hist_TF.png')
@@ -314,9 +325,10 @@ with open("outPut_TF.txt", "a") as text_file:
     plt.figure(8)
     plt.scatter( Ytest[:,0], Ypred[:,0],facecolors='none',edgecolors='b')
     plt.scatter( Ytest[:,1], Ypred[:,1],facecolors='none',edgecolors='r')
-    plt.title('Nsig%d test - est vs ground'%Nsig*2)
+    plt.title(' est vs ground')
     plt.ylabel('est')
     plt.xlabel('ground')
+    plt.legend(['umitBER','mitBER'])
     plt.grid(True)  
     plt.savefig(dataID+'scatter_TF.png')
         
