@@ -34,20 +34,13 @@ running on ARC VT is prefered, run python is preferred.
 
 
 # How to run
-* down data into `./DATA` folder via the [link](https://drive.google.com/drive/folders/1SEYScWxg7xViXz1snsuuhOBDKR7r1Npt?usp=sharing)
 * if need, run `./FUNCTION/mainGenerateData.m` to generate dataset
-* `mainFitnet.m` to training and testing w/ Matlab `fitnet` (Function fitting neural network) function
-* `mainDNN.m`  w/ customized Matlab DNN
-* `main.py`  tensorflow python.
+* `main.py`, where labels are in [0,1] scale  
+* `maindB.py`, where labels are in log scale, [0, 40]dB
+
+
   
-# Dataset Description
-* `X1.mat` `Y1.mat`, FFT_Threshold, `Ndat` 2000, `N` number of bits 1e4
-* `X2.mat` `Y2.mat`, DSSS, `Ndat` 2000, `N` number of bits 1e4   
-* `X3.mat` `Y3.mat`, DSSS, `Ndat` 2000, `N` number of bits 1e4 
-*  `X1_n.mat` `Y1_n.mat`, FFT_Threshold, AWGN only, `Ndat` approxi 400, `N` number of bits 1e4  
-*  `XLong1.mat` `YLong1.mat`, FFT_Threshold, `Ndat` 2000, `N` number of bits __1e5__
-*  `XLong3.mat` `YLong3.mat`, Notch, `Ndat` 2000, `N` number of bits __1e5__
-*  `XScale1.mat` `YScale1.mat`, FFT_Threshold, `Ndat` __20000__, `N` number of bits 1e4
+
 
 # Running Time Reference
 
