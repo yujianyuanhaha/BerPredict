@@ -143,11 +143,11 @@ class RBFLayer(Layer):
 
   
     
-t = hdf5storage.loadmat(dataID+'XLong3.mat')
+t = hdf5storage.loadmat(dataID+'X_200k.mat')
 X = t['X'] 
 Xtrain = X[:1599,:]
 Xtest = X[1600:,:]
-t = hdf5storage.loadmat(dataID+'YLong3.mat')
+t = hdf5storage.loadmat(dataID+'Y_200k.mat')
 Y= t['Y'] 
 Y = - 10*(np.log(Y/1000)/np.log(10));   # log value
 
