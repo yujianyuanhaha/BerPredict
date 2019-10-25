@@ -1,5 +1,7 @@
 # Bit-Error-Rate (BER) Predict using Neural Network
-<img src="https://filebox.ece.vt.edu/~jbhuang/images/vt-logo.png" width="240" align="right">
+<img src="https://filebox.ece.vt.edu/~jbhuang/images/vt-logo.png" width="240" align="right">  
+
+
 Aug, 2019    
 Jet Yu, jianyuan@vt.edu  
 Hussein Metwaly Saad, husseinm19@vt.edu     
