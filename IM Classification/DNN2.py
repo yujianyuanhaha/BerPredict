@@ -4,8 +4,7 @@ Created on Sat Oct 19 08:28:13 2019
 
 @author: Yue Xu
 """
-
-
+from sklearn.metrics import confusion_matrix
 
 from ToolBox import tools
 import matplotlib.pyplot as plt
@@ -110,3 +109,8 @@ plt.figure(2)
 plt.hist(y_qber_real,bins=200)
 plt.figure(3)
 plt.hist(y_test,bins=200)
+
+cm=confusion_matrix(y_test, y_pred)
+print(cm)
+plt.figure(4)
+plt.imshow(cm, cmap='binary')
