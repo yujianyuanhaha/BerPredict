@@ -47,11 +47,8 @@ under folder `DATA`, for more data, click [DataSet](https://drive.google.com/dri
 
 # Config
 running on ARC VT is prefered, run python is preferred.
- * Matlab 
-   * Machine Learning Toolbox  
-   * GPU optional
  * Python
-   * tensorflow, Keras, scikitlearn  
+   * `tensorflow`, `Keras`, `scikitlearn`  
 
 
 
