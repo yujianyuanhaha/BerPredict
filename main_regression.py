@@ -8,6 +8,7 @@ from tensorflow.keras.layers import Input, Dense,Flatten, Lambda
 from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 import scipy.io as sio
+import math
 
 np.random.seed(0)
 tf.random.set_seed(0)
@@ -16,7 +17,7 @@ tf.random.set_seed(0)
 
 dataID = './Data/'
 epochs = 100   # number of learning epochs
-batch_size = 128 #512
+batch_size = 512 #512
 early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto') # Early stopping
 
 #  =============== load data =================================
@@ -48,6 +49,17 @@ Yval = Y[train_size:train_size+val_size]
 Xtest = X[train_size+val_size:,:]
 Ytest = Y[train_size+val_size:]
 
+
+
+# extend dim
+Xtrain = Xtrain[:, :, np.newaxis]
+Xtest = Xtest[:, :, np.newaxis]
+Xval = Xval[:, :, np.newaxis]
+
+
+Ytest = Ytest[:,np.newaxis]
+Ytrain = Ytrain[:,np.newaxis]
+Yval = Yval[:,np.newaxis]
 
 # make sure data has same distribution
 
@@ -135,15 +147,6 @@ plt.savefig('./Results/hist_BER_test_mit.png')
 
 
 
-# extend dim
-Xtrain = Xtrain[:, :, np.newaxis]
-Xtest = Xtest[:, :, np.newaxis]
-Xval = Xval[:, :, np.newaxis]
-
-
-Ytest = Ytest[:,np.newaxis]
-Ytrain = Ytrain[:,np.newaxis]
-Yval = Yval[:,np.newaxis]
 #================ Extra Functions ===========================
 
 
@@ -179,7 +182,16 @@ train_hist = nn.fit(x=Xtrain,y=Ytrain,\
 
 # ================ Evaluate Model  ===========================
 
-# learning curve
+# printing the test MSE and correlation coefficient
+Ypred = nn.predict(Xtest)
+err = np.mean(abs(Ytest-Ypred),axis=0)
+err_db = -10*math.log(err,10)
+print(err_db)
+print( "--- MSE: --- %s" %(err))
+print(np.corrcoef(Ytest[:,0], Ypred[:,0]))
+
+
+# learning curve plot
 plt.figure(4)
 plt.plot(train_hist.history['mse'])
 plt.plot(train_hist.history['val_mse'])
@@ -192,12 +204,9 @@ plt.savefig('./Results/learning_curve.png')
 
 
 
-Ypred = nn.predict(Xtest)
-err = np.mean(abs(Ytest-Ypred)**2,axis=0)
-print( "--- MSE: --- %s" %(err))
-print(np.corrcoef(Ytest[:,0], Ypred[:,0]))
 
-# Histogramm of errors on test Data
+# Histogram of errors on test Data
+
 plt.figure(5)
 plt.hist(abs(Ytest[:, 0] - Ypred[:, 0]), bins=64)
 plt.ylabel('Number of occurence')
@@ -208,7 +217,7 @@ plt.savefig('./Results/hist_error_mit.png')
 
 
 # scatter plot of Y_true VS Y_pred
-plt.figure(7)
+plt.figure(6)
 plt.scatter(Ytest[:, 0], Ypred[:, 0], facecolors='none', edgecolors='b')
 plt.title(' est vs ground')
 plt.ylabel('est')
@@ -218,30 +227,10 @@ plt.grid(True)
 plt.savefig('./Results/scatter_true_VS_predict.png')
 
 
-plt.figure(8)
-plt.scatter(Ytest[:100, 0], abs(Ytest[:100, 0] - Ypred[:100, 0]), facecolors='none', edgecolors='b')
-plt.title(' ground vs error')
-plt.ylabel('error')
-plt.xlabel('ground')
-plt.legend(['mitBER'])
-plt.grid(True)
-plt.savefig('./Results/One_output_mit/scatter_true_VS_error_100.png')
-
-plt.figure(9)
-plt.scatter(Ytest[:, 0], abs(Ytest[:, 0] - Ypred[:, 0]), facecolors='none', edgecolors='b')
-plt.title(' ground vs error')
-plt.ylabel('error')
-plt.xlabel('ground')
-plt.legend(['mitBER'])
-plt.grid(True)
-plt.savefig('./Results/scatter_true_VS_error_all.png')
-
-
+# scatter plot of Y_true VS Y_pred in dB
 Y_test_dB = -10*(np.log(Ytest)/np.log(10))
 Y_pred_dB = -10*(np.log(Ypred)/np.log(10))
-err_db = np.mean(abs(Ytest-Ypred),axis=0)
-print(err_db)
-plt.figure(10)
+plt.figure(7)
 plt.scatter(Y_test_dB[:, 0], Y_pred_dB[:, 0], facecolors='none', edgecolors='b')
 plt.title(' est vs ground')
 plt.ylabel('est_dB')
@@ -251,6 +240,15 @@ plt.grid(True)
 plt.savefig('./Results/scatter_true_VS_predict_dB.png')
 
 
+# scatter plot of Y_true VS estimation error
+plt.figure(8)
+plt.scatter(Ytest[:, 0], abs(Ytest[:, 0] - Ypred[:, 0]), facecolors='none', edgecolors='b')
+plt.title(' ground vs error')
+plt.ylabel('error')
+plt.xlabel('ground')
+plt.legend(['mitBER'])
+plt.grid(True)
+plt.savefig('./Results/scatter_true_VS_error_all.png')
 
 #============== save model to file =============
 model_json = nn.to_json()
