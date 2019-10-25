@@ -10,22 +10,25 @@ from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 from datetime import datetime
 import scipy.io as sio
+import random
 
 np.random.seed(0)
-tf.random.set_seed(0)
+# tf.random.set_seed(0)
 
 # ======================== Parameters ========================
+ID = 1   # 0 for umit, 1 for mit
+dataID = './DATA/'
+epochs = 1000   # number of learning epochs
+batch_size = 4096
+early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=1, mode='auto') # Early stopping
 
-dataID = './Data/'
-epochs = 100   # number of learning epochs
-batch_size = 512
-early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=10, verbose=1, mode='auto') # Early stopping
+print( "--- ID: --- %d" %(ID))
 
 #  =============== load data =================================
 
-t = hdf5storage.loadmat(dataID+'X_200k.mat')  # XLong1    XScale1
+t = hdf5storage.loadmat(dataID+'X16k.mat')  # XLong1    XScale1
 X = t['X']
-t = hdf5storage.loadmat(dataID+'Y_200k.mat')  #  YLong1   YScale1
+t = hdf5storage.loadmat(dataID+'Y16k.mat')  #  YLong1   YScale1
 Y= t['Y']
 
 # ================== Data processing ###################
@@ -37,8 +40,8 @@ Y = Y/sc_factor
 Y = - 10*(np.log(Y/1000)/np.log(10));   # log value
 for i in range(0,Y.shape[0]):
     for j in range(0,2):
-        if np.isinf(Y[i,j]) or np.isnan(Y[i,j]):
-            Y[i,j] = 100
+        if np.isinf(Y[i,j]) or np.isnan(Y[i,j]) or Y[i,j] > 40 :
+            Y[i,j] = 40
 
 # split data
 
@@ -55,6 +58,11 @@ Yval = Y[train_size:train_size+val_size,:]
 
 Xtest = X[train_size+val_size:,:]
 Ytest = Y[train_size+val_size:,:]
+
+Ytrain = Ytrain[:,ID]
+Ytest = Ytest[:,ID]
+Yval = Yval[:,ID]
+
 
 
 # make sure data has same distribution
@@ -141,12 +149,12 @@ Xval = Xval[:, :, np.newaxis]
 
 
 
-nn_input  = Input((9,1))
+nn_input  = Input((5,1))
 nn_output = Flatten()(nn_input)
 nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(32,activation='relu')(nn_output)
-nn_output = Dense(2,activation='linear')(nn_output)
+nn_output = Dense(1,activation='linear')(nn_output)
 # nn_output = Dense(2, activation='linear')(nn_output)
 # nn_output = Lambda(clip)(nn_output)
 
@@ -182,38 +190,44 @@ train_hist = nn.fit(x=Xtrain,y=Ytrain,\
 
 Ypredtrain = nn.predict(Xtrain)
 Ypred = nn.predict(Xtest)
-err = np.mean(abs(Ytest-Ypred),axis=0)**2
+
+
+
+
+
+
+err = np.mean(abs(Ytest-Ypred))
 print( "--- MSE: --- %s" %(err))
-print(np.corrcoef(Ytest[:,0], Ypred[:,0]))
-print(np.corrcoef(Ytest[:,1], Ypred[:,1]))
+# print(np.corrcoef(Ytest[:,0], Ypred[:,0]))
+# print(np.corrcoef(Ytest, Ypred))
 
 # Histogramm of errors on test Data
-plt.figure(4)
-plt.hist(abs(Ytest[:, 0] - Ypred[:, 0]), bins=64)
-plt.ylabel('Number of occurence')
-plt.xlabel('Estimate error')
-plt.grid(True)
-plt.title('histogram of estimation error mit.')
-plt.savefig('./Results/hist_error_unmit.png')
+# plt.figure(4)
+# plt.hist(abs(Ytest - Ypred), bins=64)
+# plt.ylabel('Number of occurence')
+# plt.xlabel('Estimate error')
+# plt.grid(True)
+# plt.title('histogram of estimation error ')
+# plt.savefig('./Results/hist_error_%d.png'%ID)
 
-plt.figure(5)
-plt.hist(abs(Ytest[:, 1] - Ypred[:, 1]), bins=64)
-plt.ylabel('Number of occurence')
-plt.xlabel('Estimate error')
-plt.grid(True)
-plt.title('histogram of estimation error unmit.')
-plt.savefig('./Results/hist_error_mit.png')
+# plt.figure(5)
+# plt.hist(abs(Ytest[:, 1] - Ypred[:, 1]), bins=64)
+# plt.ylabel('Number of occurence')
+# plt.xlabel('Estimate error')
+# plt.grid(True)
+# plt.title('histogram of estimation error mit.')
+# plt.savefig('./Results/hist_error_mit.png')
 
 # scatter plot of Y_true VS Y_pred
-plt.figure(6)
-plt.scatter(Ytest[:100, 0], Ypred[:100, 0], facecolors='none', edgecolors='b')
-plt.scatter(Ytest[:100, 1], Ypred[:100, 1], facecolors='none', edgecolors='r')
-plt.title(' est vs ground')
-plt.ylabel('est')
-plt.xlabel('ground')
-plt.legend(['unmitBER', 'mitBER'])
-plt.grid(True)
-plt.savefig('./Results/scatter_TF.png')
+# plt.figure(6)
+# plt.scatter(Ytest[:100], Ypred[:100], facecolors='none', edgecolors='b')
+# # plt.scatter(Ytest[:100, 1], Ypred[:100, 1], facecolors='none', edgecolors='r')
+# plt.title(' est vs ground')
+# plt.ylabel('est')
+# plt.xlabel('ground')
+# plt.legend(['unmitBER', 'mitBER'])
+# plt.grid(True)
+# plt.savefig('./Results/scatter_%d.png'%ID)
 
 
 #============== save model to file =============
@@ -224,5 +238,8 @@ with open("./Results/model_TF.json", "w") as json_file:
     print("Saved model to disk")
 
 
-# # save down pred data
-# sio.savemat(dataID+'Ypred_TF.mat', {'Ypred':Ypred})
+
+
+
+sio.savemat('./Results/Ytest16k%d-mainDB.mat'%ID, {'Ytest':Ytest})
+sio.savemat('./Results/Ypred16k%d-mainDB.mat'%ID, {'Ypred':Ypred.T})    # <<<<<<<<<

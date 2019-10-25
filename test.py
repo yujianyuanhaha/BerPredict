@@ -14,12 +14,10 @@ from sklearn.externals import joblib
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 # ---------------- load data ---------------------------------
-
-t = hdf5storage.loadmat('./DATA/X_200k.mat')
+t = hdf5storage.loadmat('./DATA/X160k.mat')
 X_test = t['X']
 
 # ---------------- load model ---------------------------------
-
 json_file = open('./Results/model_TF.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
