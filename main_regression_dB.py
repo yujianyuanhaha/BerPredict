@@ -12,17 +12,19 @@ from datetime import datetime
 import scipy.io as sio
 import random
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 np.random.seed(0)
 # tf.random.set_seed(0)
 
 # ======================== Parameters ========================
-#ID = 1   # 0 for umit, 1 for mit
+
 dataID = './DATA/'
-epochs = 1000   # number of learning epochs
+epochs = 4000   # number of learning epochs
 batch_size = 4096
 early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=1, mode='auto') # Early stopping
 
-#print( "--- ID: --- %d" %(ID))
+
 
 #  =============== load data =================================
 
@@ -59,9 +61,6 @@ Yval = Y[train_size:train_size+val_size,:]
 Xtest = X[train_size+val_size:,:]
 Ytest = Y[train_size+val_size:,:]
 
-#Ytrain = Ytrain[:,ID]
-#Ytest = Ytest[:,ID]
-#Yval = Yval[:,ID]
 
 
 
@@ -135,14 +134,7 @@ Xtrain = Xtrain[:, :, np.newaxis]
 Xtest = Xtest[:, :, np.newaxis]
 Xval = Xval[:, :, np.newaxis]
 
-#================ Extra Functions ===========================
 
-# # Distance Functions
-# def dist(y_true, y_pred):
-#      return tf.reduce_mean(tf.sqrt(tf.square(tf.abs(y_pred-y_true)) ))
-
-# def clip(x,fact=sc_factor):
-#     return tf.keras.backend.clip(x,0.0,1000.0/fact)
 
 
 #================ Model Building ===========================
@@ -155,8 +147,6 @@ nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(2,activation='linear')(nn_output)
-# nn_output = Dense(2, activation='linear')(nn_output)
-# nn_output = Lambda(clip)(nn_output)
 
 nn = Model(inputs=nn_input,outputs=nn_output)
 
@@ -198,36 +188,35 @@ Ypred = nn.predict(Xtest)
 
 err = np.mean(abs(Ytest-Ypred))
 print( "--- MSE: --- %s" %(err))
-# print(np.corrcoef(Ytest[:,0], Ypred[:,0]))
-# print(np.corrcoef(Ytest, Ypred))
+print(np.corrcoef(Ytest, Ypred))
 
 # Histogramm of errors on test Data
-# plt.figure(4)
-# plt.hist(abs(Ytest - Ypred), bins=64)
-# plt.ylabel('Number of occurence')
-# plt.xlabel('Estimate error')
-# plt.grid(True)
-# plt.title('histogram of estimation error ')
-# plt.savefig('./Results/hist_error_%d.png'%ID)
+plt.figure(4)
+plt.hist(abs(Ytest - Ypred), bins=64)
+plt.ylabel('Number of occurence')
+plt.xlabel('Estimate error')
+plt.grid(True)
+plt.title('histogram of estimation error ')
+plt.savefig('./Results/hist_error.png')
 
 # plt.figure(5)
-# plt.hist(abs(Ytest[:, 1] - Ypred[:, 1]), bins=64)
-# plt.ylabel('Number of occurence')
-# plt.xlabel('Estimate error')
-# plt.grid(True)
-# plt.title('histogram of estimation error mit.')
-# plt.savefig('./Results/hist_error_mit.png')
+plt.hist(abs(Ytest[:, 1] - Ypred[:, 1]), bins=64)
+plt.ylabel('Number of occurence')
+plt.xlabel('Estimate error')
+plt.grid(True)
+plt.title('histogram of estimation error mit.')
+plt.savefig('./Results/hist_error_mit.png')
 
 # scatter plot of Y_true VS Y_pred
-# plt.figure(6)
-# plt.scatter(Ytest[:100], Ypred[:100], facecolors='none', edgecolors='b')
-# # plt.scatter(Ytest[:100, 1], Ypred[:100, 1], facecolors='none', edgecolors='r')
-# plt.title(' est vs ground')
-# plt.ylabel('est')
-# plt.xlabel('ground')
-# plt.legend(['unmitBER', 'mitBER'])
-# plt.grid(True)
-# plt.savefig('./Results/scatter_%d.png'%ID)
+plt.figure(6)
+plt.scatter(Ytest[:,0], Ypred[:,0], facecolors='none', edgecolors='b')
+plt.scatter(Ytest[:,1], Ypred[:,1], facecolors='none', edgecolors='r')
+plt.title(' est vs ground')
+plt.ylabel('est')
+plt.xlabel('ground')
+plt.legend(['unmitBER', 'mitBER'])
+plt.grid(True)
+plt.savefig('./Results/scatter.png')
 
 
 #============== save model to file =============

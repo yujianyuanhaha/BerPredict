@@ -14,84 +14,11 @@ class tools:
         
         for i in range(lengthY):
             temp_value = Y[i,0]
-            temp_y_type = tools.classficationType3(temp_value)
+            temp_y_type = tools.classficationType1(temp_value)
             y_classified.append(temp_y_type)
             
             
         return y_classified
-            
-
-    def classficationType3(y):  # Quantization levels and map
-        
-        y_type = 0
-
-        min_ber = 1/np.power(10,4)
-        middle_ber21 = 3 * 1/np.power(10,4)
-        middle_ber22 = 5 * 1/np.power(10,4)
-        middle_ber23 = 7 * 1/np.power(10,4)
-        middle_ber24 = 9 * 1/np.power(10,4)
-        middle_ber2 = 1/np.power(10,3)
-        middle_ber31 = 3 * 1/np.power(10,3)
-        middle_ber32 = 5 * 1/np.power(10,3)
-        middle_ber33 = 7 * 1/np.power(10,3)
-        middle_ber34 = 9 * 1/np.power(10,3)
-        middle_ber3 = 1/np.power(10,2)
-        middle_ber41 = 3 * 1/np.power(10,2)
-        middle_ber42 = 5 * 1/np.power(10,2)
-        middle_ber43 = 7 * 1/np.power(10,2)
-        middle_ber44 = 9 * 1/np.power(10,2)
-        max_ber = 1/np.power(10,1)
-        middle_ber51 = 3.5 * 1/np.power(10,1)
-        
-        
-        if y <= min_ber:
-            y_type = 1
-        elif y> min_ber and y <= middle_ber2:
-            if y<=middle_ber21:
-                y_type = 2
-            elif y<=middle_ber22:
-                y_type = 3
-            elif y<=middle_ber23:
-                y_type = 4
-            elif y<=middle_ber24:
-                y_type = 5
-            else:
-                y_type = 6
-        elif y> middle_ber2 and y <= middle_ber3:
-            if y<=middle_ber31:
-                y_type = 7
-            elif y<=middle_ber32:
-                y_type = 8
-            elif y<=middle_ber33:
-                y_type = 9
-            elif y<=middle_ber34:
-                y_type = 10
-            else:
-                y_type = 11
-
-        elif y> middle_ber3 and y <= max_ber:
-            if y<=middle_ber41:
-                y_type = 12
-            elif y<=middle_ber42:
-                y_type = 13
-            elif y<=middle_ber43:
-                y_type = 14
-            elif y<=middle_ber44:
-                y_type = 15
-            else:
-                y_type = 16
-
-        elif y> max_ber and y <= middle_ber51:
-            y_type = 17
-            
-        elif y> middle_ber51 and y<=1:
-            y_type = 18   
-            
-        elif y>1:
-            y_type = 0
-                            
-        return y_type
-
 
     def mapBERvalue(Y):  # takes a class label and maps to the corresponding quantized level
         
@@ -101,59 +28,57 @@ class tools:
         
         for i in range(lengthY):
             temp_value = Y[i]
-            temp_y_type = tools.creatBERvalue3(temp_value)
+            temp_y_type = tools.creatBERvalue1(temp_value)
             y_mv.append(temp_y_type)
             
             
-        return y_mv
+        return y_mv            
+
+
+    def classficationType1(y):  # Quantization levels and map
+        
+        y_type = 0
+        
+        ber_map = tools.classficationTypeMap(5)
+        if y >= 0.9:
+            y_type = 0
+        else:
+            temp_level = ber_map<y
+            idx = np.where(temp_level==False)
+            y_type = int(idx[0][0])+1
+
+
+                            
+        return y_type
 
 
 
-    def creatBERvalue3(Y):
+
+    def creatBERvalue1(Y):
         
         y = 0
         
-        if Y == 1:
-            y = 1/np.power(10,4)
-        elif Y == 2:
-            y = 2/np.power(10,4)
-        elif Y == 3:
-            y = 4/np.power(10,4)        
-        elif Y == 4:
-            y = 6/np.power(10,4)
-        elif Y == 5:
-            y = 8/np.power(10,4)            
-        elif Y == 6:
-            y = 9.5/np.power(10,4)
-        elif Y == 7:
-            y = 2/np.power(10,3)
-        elif Y == 8:
-            y = 4/np.power(10,3)
-        elif Y == 9:
-            y = 6/np.power(10,3)
-        elif Y == 10:
-            y = 8/np.power(10,3)
-        elif Y == 11:
-            y = 9.5/np.power(10,3)
-        elif Y == 12:
-            y = 2/np.power(10,2)
-        elif Y == 13:
-            y = 4/np.power(10,2)
-        elif Y == 14:
-            y = 6/np.power(10,2)
-        elif Y == 15:
-            y = 8/np.power(10,2)
-        elif Y == 16:
-            y = 9.5/np.power(10,2)
-        elif Y == 17:
-            y = 2/np.power(10,1)
-        elif Y == 18:
-            y = 5/np.power(10,1)
-        elif Y == 0:
-            y = 1
+        ber_map = tools.classficationTypeMap(5)
+        
+        if Y==0:
+            y = 0.95
+        else:
+            tempIdx = Y-1
+            y = (ber_map[tempIdx-1] + ber_map[tempIdx])/2
             
         return y
 
+    def classficationTypeMap(minBer):
+        
+        ber_map = []
+        for i in range(minBer):
+            temp_ber_level = 1/np.power(10,minBer-i)
+            for j in range(9):
+                temp_ber_start = (j+1) * temp_ber_level
+                ber_map.append(temp_ber_start)
+
+            
+        return ber_map
 
     def calculateQBER(est,real):  ### Calculates Quntization error
 
@@ -172,30 +97,35 @@ class tools:
         ber = -10*math.log(sumBer / lengthY,10)
             
         return ber
+    def calculateQBER2(est,real):
+        
+        ber = 0;
+        sumBer = 0
+        
+        lengthY = len(est);
+        
+        for i in range(lengthY):
+            temp_est = est[i]
+            temp_real = real[i,0]
+            if temp_est <= 0:
+                temp_est = 1/np.power(10,9)
+            if temp_real <=0:
+                temp_real = 1/np.power(10,9)
+            temp = abs(-10*math.log(temp_est,10) - -10*math.log(temp_real,10))
+            sumBer = sumBer + temp
 
+        ber = sumBer / lengthY   
+            
+        return ber
 
     def cm_analysis(y_true, y_pred, ymap=None, figsize=(10,10)):
-        """
-        Generate matrix plot of confusion matrix with pretty annotations.
-        The plot image is saved to disk.
-        args:
-          y_true:    true label of the data, with shape (nsamples,)
-          y_pred:    prediction of the data, with shape (nsamples,)
-          filename:  filename of figure file to save
-          labels:    string array, name the order of class labels in the confusion matrix.
-                     use `clf.classes_` if using scikit-learn models.
-                     with shape (nclass,).
-          ymap:      dict: any -> string, length == nclass.
-                     if not None, map the labels & ys to more understandable strings.
-                     Caution: original y_true, y_pred and labels must align.
-          figsize:   the size of the figure plotted.
-        """
         if ymap is not None:
             y_pred = [ymap[yi] for yi in y_pred]
             y_true = [ymap[yi] for yi in y_true]
         cm = confusion_matrix(y_true, y_pred)
         cm_sum = np.sum(cm, axis=1, keepdims=True)
         cm_perc = cm / cm_sum.astype(float) * 100
+        np.save("cm_perc_m.npy",cm_perc)
         annot = np.empty_like(cm).astype(str)
         nrows, ncols = cm.shape
         for i in range(nrows):
