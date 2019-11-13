@@ -16,19 +16,19 @@ np.random.seed(0)
 # tf.random.set_seed(0)
 
 # ======================== Parameters ========================
-ID = 1   # 0 for umit, 1 for mit
+#ID = 1   # 0 for umit, 1 for mit
 dataID = './DATA/'
 epochs = 1000   # number of learning epochs
 batch_size = 4096
 early_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=1, mode='auto') # Early stopping
 
-print( "--- ID: --- %d" %(ID))
+#print( "--- ID: --- %d" %(ID))
 
 #  =============== load data =================================
 
-t = hdf5storage.loadmat(dataID+'X16k.mat')  # XLong1    XScale1
+t = hdf5storage.loadmat(dataID+'X16k1.mat')  # XLong1    XScale1
 X = t['X']
-t = hdf5storage.loadmat(dataID+'Y16k.mat')  #  YLong1   YScale1
+t = hdf5storage.loadmat(dataID+'Y16k1.mat')  #  YLong1   YScale1
 Y= t['Y']
 
 # ================== Data processing ###################
@@ -59,9 +59,9 @@ Yval = Y[train_size:train_size+val_size,:]
 Xtest = X[train_size+val_size:,:]
 Ytest = Y[train_size+val_size:,:]
 
-Ytrain = Ytrain[:,ID]
-Ytest = Ytest[:,ID]
-Yval = Yval[:,ID]
+#Ytrain = Ytrain[:,ID]
+#Ytest = Ytest[:,ID]
+#Yval = Yval[:,ID]
 
 
 
@@ -154,7 +154,7 @@ nn_output = Flatten()(nn_input)
 nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(32,activation='relu')(nn_output)
 nn_output = Dense(32,activation='relu')(nn_output)
-nn_output = Dense(1,activation='linear')(nn_output)
+nn_output = Dense(2,activation='linear')(nn_output)
 # nn_output = Dense(2, activation='linear')(nn_output)
 # nn_output = Lambda(clip)(nn_output)
 
@@ -241,5 +241,5 @@ with open("./Results/model_TF.json", "w") as json_file:
 
 
 
-sio.savemat('./Results/Ytest16k%d-mainDB.mat'%ID, {'Ytest':Ytest})
-sio.savemat('./Results/Ypred16k%d-mainDB.mat'%ID, {'Ypred':Ypred.T})    # <<<<<<<<<
+sio.savemat('./Results/Ytest16k-mainDB.mat', {'Ytest':Ytest})
+sio.savemat('./Results/Ypred16k-mainDB.mat', {'Ypred':Ypred.T})    # <<<<<<<<<

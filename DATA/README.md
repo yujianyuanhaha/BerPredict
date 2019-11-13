@@ -2,10 +2,8 @@
 [DataSet](https://drive.google.com/drive/folders/1SEYScWxg7xViXz1snsuuhOBDKR7r1Npt?usp=sharing)
 
 # Dataset Description  
-* `X16k.mat`,  16k data, 5 inputs `[ bitsPerSym, JtoS, EbNo, IntfType,duty]`  
-* `Y16k.mat`,  16k data, 2 inputs `[ unMitBer, MitBer]`   
-* `X160k.mat`, 160k data input  
-* `Y160k.mat`, 160k data output  
+* `X16k1.mat`,  16k data, 5 inputs `[ bitsPerSym, JtoS, EbNo, IntfType,duty]`  
+* `Y16k1.mat`,  16k data, 2 inputs `[ unMitBer, MitBer]`   
 Notice: data has beed shuffled.
 
 
