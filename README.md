@@ -36,7 +36,7 @@ under folder `DATA`, for more data, click [DataSet](https://drive.google.com/dri
 [Chat/ Hangout Group](https://chat.google.com/dm/5UaasgAAAAE)
 
 # Slides
-[performance Google slides](https://docs.google.com/presentation/d/1wvBJu3MCXwSCdlEYCqtS8yEkW09xzvSyF3J_e1V8rkM/edit?usp=sharing)
+[performance Google slides](https://docs.google.com/presentation/d/1VWrGMLpcMN6-HCs_-lINsF1C2rGetQ_UcSqOe9gokTs/edit?usp=sharing)
 
 
 
