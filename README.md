@@ -17,11 +17,14 @@ under folder `DATA`, for more data, click [DataSet](https://drive.google.com/dri
 
 
 # How to run
-* if need, run `./FUNCTION/mainGenerateData.m` to generate dataset
-* `main_regression.py`, where labels are in [0,1] scale  
-* `main_regression_dB.py`, where labels are in log scale, [0, 40]dB
-* `main_classification.py`, where labels are in another log scale
-
+* if need, run `./FUNCTION/mainData.m` to generate dataset
+* Neural Network
+  * `main_regression.py`, where labels are in [0,1] scale  
+  * `main_regression_dB.py`, where labels are in log scale, [0, 40]dB
+  * `main_classification.py`, where labels are in another log scale
+* Random Forest
+  * `mainRF.m`, in matlab. 1-dimension
+  * `mainRF.py`, in python
 
 # File Description
 * `ToolBox.py` is called by `main_classification.py`.  
